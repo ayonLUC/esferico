@@ -1,0 +1,90 @@
+import streamlit as st
+from src.data_loader import load_matches
+
+# ============================================================
+# APP TITLE
+# ============================================================
+
+st.title("Esferico ⚽️ — EPL Analytics Tutor (MVP)")
+
+# ============================================================
+# LOAD DATA
+# ============================================================
+
+df = load_matches()
+
+# ============================================================
+# TEAM SELECTION
+# ============================================================
+
+st.write("Rows, Columns:", df.shape)
+st.dataframe(df.head(10))
+
+# Get all unique teams from home and away columns
+teams = sorted(set(df["HomeTeam"]).union(set(df["AwayTeam"])))
+
+# Dropdown selector
+selected_team = st.selectbox("Select a Team", teams)
+
+st.write("You selected:", selected_team)
+
+# ============================================================
+# TEAM MATCH FILTERING
+# ============================================================
+
+# Filter matches where selected team played
+team_matches = df[
+    (df["HomeTeam"] == selected_team) |
+    (df["AwayTeam"] == selected_team)
+]
+
+st.write("Total Matches:", len(team_matches))
+st.dataframe(team_matches.head())
+
+# ============================================================
+# LAST 5 MATCHES
+# ============================================================
+
+# Sort by date (most recent last in dataset, so we sort descending)
+team_matches_sorted = team_matches.sort_values("Date", ascending=False)
+
+# Select last 5 matches
+
+last_5 = team_matches_sorted.head(5)
+
+st.subheader("Last 5 Matches")
+st.dataframe(last_5[["Date", "HomeTeam", "AwayTeam", "FTHG", "FTAG", "FTR"]])
+
+# ============================================================
+# LAST 5 PERFORMANCE METRICS
+# ============================================================
+
+points = 0
+goals_scored = 0
+goals_conceded = 0
+
+for _, row in last_5.iterrows():
+
+    # Determine if team was home or away
+    if row["HomeTeam"] == selected_team:
+        goals_scored += row["FTHG"]
+        goals_conceded += row["FTAG"]
+
+        if row["FTR"] == "H":
+            points += 3
+        elif row["FTR"] == "D":
+            points += 1
+
+    else:
+        goals_scored += row["FTAG"]
+        goals_conceded += row["FTHG"]
+
+        if row["FTR"] == "A":
+            points += 3
+        elif row["FTR"] == "D":
+            points += 1
+
+st.subheader("Last 5 Summary")
+st.write("Points:", points)
+st.write("Goals Scored:", goals_scored)
+st.write("Goals Conceded:", goals_conceded)
