@@ -5,7 +5,7 @@ from src.data_loader import load_matches
 # APP TITLE
 # ============================================================
 
-st.title("Esferico ⚽️ — EPL Analytics Tutor (MVP)")
+st.title("Esferico ⚽️ — EPL Analytics Tutor")
 
 # ============================================================
 # LOAD DATA
@@ -88,3 +88,28 @@ st.subheader("Last 5 Summary")
 st.write("Points:", points)
 st.write("Goals Scored:", goals_scored)
 st.write("Goals Conceded:", goals_conceded)
+
+# ============================================================
+# FORM
+# ============================================================
+
+form = []
+for _, row in last_5.iterrows():
+    ftr = row["FTR"]
+
+    if ftr == "D":
+        form.append("D")
+
+    elif ftr == "H":
+        # Home team won
+        form.append("W" if row["HomeTeam"] == selected_team else "L")
+
+    elif ftr == "A":
+        # Away team won
+        form.append("W" if row["AwayTeam"] == selected_team else "L")
+
+    else:
+        form.append("?")
+
+form_string = " ".join(form[:: -1])
+st.write("Form:", form_string)
