@@ -19,6 +19,9 @@ df = load_matches()
 
 st.write("Rows, Columns:", df.shape)
 st.dataframe(df.head(10))
+show_raw = st.checkbox("Show raw data")
+if show_raw:
+    st.dataframe(df)
 
 # Get all unique teams from home and away columns
 teams = sorted(set(df["HomeTeam"]).union(set(df["AwayTeam"])))
