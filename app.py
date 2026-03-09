@@ -41,8 +41,25 @@ team_matches = df[
     (df["AwayTeam"] == selected_team)
 ]
 
+
+st.dataframe(team_matches)
 st.write("Total Matches:", len(team_matches))
-st.dataframe(team_matches.head())
+
+# goals scored, home and away
+home_goals = team_matches[team_matches["HomeTeam"] == selected_team]["FTHG"].sum()
+away_goals = team_matches[team_matches["AwayTeam"] == selected_team]["FTAG"].sum()
+
+goals_scored = home_goals + away_goals
+
+st.write("Goals Scored:", goals_scored)
+
+# goals conceded, home and away
+home_conceded = team_matches[team_matches["HomeTeam"] == selected_team]["FTAG"].sum()
+away_conceded = team_matches[team_matches["AwayTeam"] == selected_team]["FTHG"].sum()
+
+goals_conceded = home_conceded + away_conceded
+
+st.write("Goals Conceded:", goals_conceded)
 
 # ============================================================
 # LAST 5 MATCHES
