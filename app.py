@@ -41,9 +41,11 @@ team_matches = df[
     (df["AwayTeam"] == selected_team)
 ]
 
+col1, col2, col3 = st.columns(3)
 
 st.dataframe(team_matches)
-st.write("Total Matches:", len(team_matches))
+#st.write("Total Matches:", len(team_matches))
+col1.metric("Matches", len(team_matches))
 
 # goals scored, home and away
 home_goals = team_matches[team_matches["HomeTeam"] == selected_team]["FTHG"].sum()
@@ -51,7 +53,9 @@ away_goals = team_matches[team_matches["AwayTeam"] == selected_team]["FTAG"].sum
 
 goals_scored = home_goals + away_goals
 
-st.write("Goals Scored:", goals_scored)
+#st.write("Goals Scored:", goals_scored)
+col2.metric("Goals Scored", goals_scored)
+
 
 # goals conceded, home and away
 home_conceded = team_matches[team_matches["HomeTeam"] == selected_team]["FTAG"].sum()
@@ -59,7 +63,8 @@ away_conceded = team_matches[team_matches["AwayTeam"] == selected_team]["FTHG"].
 
 goals_conceded = home_conceded + away_conceded
 
-st.write("Goals Conceded:", goals_conceded)
+#st.write("Goals Conceded:", goals_conceded)
+col3.metric("Goals Conceded:", goals_conceded)
 
 # ============================================================
 # LAST 5 MATCHES
@@ -132,4 +137,6 @@ for _, row in last_5.iterrows():
         form.append("?")
 
 form_string = " ".join(form[:: -1])
-st.write("Form:", form_string)
+# st.write("Form:", form_string)
+form_string = " ".join(form)
+st.markdown(f"**Form:** `{form_string}`")

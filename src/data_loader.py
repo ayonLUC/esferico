@@ -18,6 +18,10 @@ KEEP_COLS = [
 def load_matches(path: str = DATA_PATH) -> pd.DataFrame:
     df = pd.read_csv(path)
 
+    # Fix date format
+    df["Date"] = pd.to_datetime(df["Date"], dayfirst=True).dt.strftime("%m/%d/%Y")
+
+
     cols = [c for c in KEEP_COLS if c in df.columns]
     df = df[cols].copy()
 
